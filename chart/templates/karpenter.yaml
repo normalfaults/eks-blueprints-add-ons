@@ -9,9 +9,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: {{ .Values.repo_url }}
+    repoURL: {{ .Values.repoUrl }}
     path: add-ons/karpenter
-    targetRevision: HEAD
+    targetRevision: {{ .Values.targetRevision }}
     helm:
       parameters:
         - name: karpenter.serviceAccount.name
@@ -34,4 +34,11 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 1m
-  {{- end -}}
+  ignoreDifferences:
+    - group: "*"
+      kind: Secret
+      name: karpenter-cert
+      namespace: karpenter
+      jsonPointers:
+        - /data
+{{- end -}}
